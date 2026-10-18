@@ -1,4 +1,3 @@
-
 package edu.itc.salesreport.ingest;
 
 import edu.itc.salesreport.model.PaymentMethod;
