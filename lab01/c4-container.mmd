@@ -1,0 +1,36 @@
+
+flowchart TB
+    analyst["Head-office Analyst<br/>[Person]<br/>Views and exports reports"]:::person
+    manager["Branch Manager<br/>[Person]<br/>Views own branch report"]:::person
+    pos["Branch POS Systems<br/>[External System x3]<br/>Produces daily CSV files"]:::external
+    email["E-mail Service<br/>[External System]<br/>Delivers notifications"]:::external
+
+    subgraph boundary["Angkor Mart Monthly Sales Report System"]
+        ingest["Ingest Job<br/>[Java 25]<br/>Receives and validates CSV files"]:::container
+
+        landing[("Landing Zone<br/>[File System]<br/>Stores uploaded CSV files")]:::database
+
+        batch["Report Batch<br/>[Java 25 / Maven]<br/>Aggregates sales and generates reports"]:::container
+
+        store[("Report Store<br/>[File System]<br/>Stores generated reports")]:::database
+
+        desktop["JavaFX Desktop Viewer<br/>[JavaFX]<br/>Analyst report interface"]:::container
+
+        web["Web Report Page<br/>[Web Application]<br/>Branch manager report interface"]:::container
+
+        ingest -->|"Writes CSV files [file system]"| landing
+        landing -->|"Reads CSV files [file system]"| batch
+        batch -->|"Writes reports [file system]"| store
+        store -->|"Reads reports [file system]"| desktop
+        store -->|"Reads authorized reports [file system]"| web
+    end
+
+    pos -->|"Uploads CSV files [SFTP]"| ingest
+    analyst -->|"Views reports [desktop UI]"| desktop
+    manager -->|"Views own reports [HTTPS]"| web
+    batch -->|"Sends ready notification [SMTP]"| email
+
+    classDef person fill:#08427b,color:#ffffff,stroke:#052e56
+    classDef external fill:#8a8a8a,color:#ffffff,stroke:#6b6b6b
+    classDef container fill:#1168bd,color:#ffffff,stroke:#0b4884
+    classDef database fill:#438dd5,color:#ffffff,stroke:#27679b
