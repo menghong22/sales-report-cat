@@ -1,0 +1,24 @@
+
+flowchart TB
+    analyst["Head-office Analyst<br/>[Person]<br/>Views and exports all reports"]:::person
+
+    manager["Branch Manager<br/>[Person]<br/>Views own branch reports only"]:::person
+
+    director["Finance Director<br/>[Person]<br/>Receives report-ready notifications"]:::person
+
+    system["Angkor Mart Monthly Sales Report<br/>[Software System]<br/>Processes CSV sales and generates monthly reports"]:::system
+
+    pos["Branch POS Systems<br/>[External System x3]<br/>Exports daily sales CSV files"]:::external
+
+    email["E-mail Service<br/>[External System]<br/>Delivers report notifications"]:::external
+
+    analyst -->|"Views and exports reports"| system
+    manager -->|"Views own branch reports"| system
+    system -->|"Notifies when report is ready"| director
+    pos -->|"Uploads daily CSV files via SFTP"| system
+    system -->|"Sends report-ready messages via SMTP"| email
+    email -->|"Delivers notification"| director
+
+    classDef person fill:#08427b,color:#ffffff,stroke:#052e56
+    classDef system fill:#1168bd,color:#ffffff,stroke:#0b4884
+    classDef external fill:#8a8a8a,color:#ffffff,stroke:#6b6b6b
